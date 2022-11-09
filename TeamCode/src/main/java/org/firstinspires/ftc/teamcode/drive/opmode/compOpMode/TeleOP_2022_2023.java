@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="hambunger", group="Linear Opmode")
-public class TeleOP_20222023 extends LinearOpMode {
+public class TeleOP_2022_2023 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -31,9 +31,10 @@ public class TeleOP_20222023 extends LinearOpMode {
     private DcMotor drive_RR = null;
     private DcMotor vertiArm = null;
     private DcMotor horizArm = null;
-    private DcMotor raiseHorizArm = null;
-    private Servo claw = null;
-    private Servo turnClaw = null;
+    private DcMotor angleArm = null;
+    private Servo horizClaw = null;
+    private Servo transferClaw = null;
+    private Servo transferArm = null;
 
     //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back
     public final static double ARM_MIN_RANGE = 0.46;
@@ -50,14 +51,6 @@ public class TeleOP_20222023 extends LinearOpMode {
         drive_RL = hardwareMap.get(DcMotor.class, "drive_RL");
         drive_FR = hardwareMap.get(DcMotor.class, "drive_FR");
         drive_RR = hardwareMap.get(DcMotor.class, "drive_RR");
-
-        /*horizArm.setDirection(DcMotor.Direction.REVERSE);
-       vertiArm.setDirection(DcMotor.Direction.FORWARD);
-       raiseHorizArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
-
-        horizArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        vertiArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        raiseHorizArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //armTurn.setPosition(ARM_DEFAULT); //Unslash this if you want armTurn servo using joystick back
 
@@ -82,6 +75,14 @@ public class TeleOP_20222023 extends LinearOpMode {
         drive_FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_RL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_RR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        horizArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vertiArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        angleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+          /*horizArm.setDirection(DcMotor.Direction.REVERSE);
+       vertiArm.setDirection(DcMotor.Direction.FORWARD);
+       angleArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
