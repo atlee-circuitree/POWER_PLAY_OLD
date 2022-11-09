@@ -125,55 +125,47 @@ public class TeleOP_2022_2023 extends LinearOpMode {
             //Extends and Retracts horizArm
             if (gamepad2.x) {
                 horizArm.setPower(.2);
-            }else if (gamepad2.a){
+            } else if (gamepad2.a) {
                 horizArm.setPower(-.2);
-            }else {
+            } else {
                 horizArm.setPower(0);
             }
 
             //Opens and Closes claw
             if (gamepad2.y) {
                 horizClaw.setPosition(.2);
-            }else if (gamepad2.b){
+            } else if (gamepad2.b) {
                 horizClaw.setPosition(-.2);
-            }else {
+            } else {
                 horizClaw.setPosition(0);
+            }
+
+            //Moves vertArm up and down
+            if (gamepad2.dpad_up){
+                vertiArm.setPower(.2);
+            } else if (gamepad2.dpad_down) {
+                vertiArm.setPower(-.2);
+            } else {
+                vertiArm.setPower(0);
             }
 
             //Opens and Closes Transfer Claw
             if (gamepad2.left_bumper) {
                 transferClaw.setPosition(.2);
-            }else if (gamepad2.right_bumper) {
+            } else if (gamepad2.right_bumper) {
                 transferClaw.setPosition(-.2);
-            }else {
+            } else {
                 transferClaw.setPosition(0);
             }
 
             //Moves anglearm up and down
-                if (gamepad2.right_trigger > .5 ) {
-                    angleArm.setPower(.2);
-                }else if (gamepad2.left_trigger > .5){
-                    angleArm.setPower(-.2);
-                }else {
-                    angleArm.setPower(0);
-                }
-                //Moves vertArm up and down
-                if (gamepad2.dpad_up){
-                    vertiArm.setPower(.2);
-                }else if (gamepad2.dpad_down){
-                    vertiArm.setPower(-.2);
-                }else {
-                    vertiArm.setPower(0);
-                }
-            //Turns feeder box variably with joystick  //Unslash this section if you want armTurn servo using joystick back.
-            /*if (gamepad2.right_stick_x > .05)         // Also slash out button armTurn , it's right above this function.
-                armTurnPosition -= ARM_SPEED;
-            else if (gamepad2.right_stick_x < -.05)
-                armTurnPosition += ARM_SPEED;
-
-            armTurnPosition = Range.clip(armTurnPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-            armTurn.setPosition(armTurnPosition); */
-
+            if (gamepad2.right_trigger > .5 ) {
+                angleArm.setPower(.2);
+            } else if (gamepad2.left_trigger > .5) {
+                angleArm.setPower(-.2);
+            } else {
+                angleArm.setPower(0);
+            }
         }
     }
 
