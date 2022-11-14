@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
@@ -71,6 +72,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private DcMotorEx frontLeft, backLeft, backRight, frontRight;
     private List<DcMotorEx> motors;
+    private DcMotor vertiArm = null;
+    private DcMotor horizArm = null;
+    private DcMotor angleArm = null;
+    private Servo horizClaw = null;
+    private Servo transferClaw = null;
+    private Servo transferArm = null;
 
     private BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -123,6 +130,16 @@ public class SampleMecanumDrive extends MecanumDrive {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
+
+        vertiArm = hardwareMap.get(DcMotor.class, "vertiArm");
+        horizArm = hardwareMap.get(DcMotorEx.class, "horizarm");
+        angleArm = hardwareMap.get(DcMotorEx.class, "angleArm");
+
+        horizClaw = hardwareMap.get(Servo.class, "horizClaw");
+        transferClaw = hardwareMap.get(Servo.class, "transferClaw");
+        transferArm = hardwareMap.get(Servo.class, "transferarm");
+
+
 
         motors = Arrays.asList(frontLeft, backLeft, backRight, frontRight);
 

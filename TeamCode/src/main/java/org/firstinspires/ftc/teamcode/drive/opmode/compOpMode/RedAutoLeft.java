@@ -23,6 +23,7 @@ public class RedAutoLeft extends LinearOpMode {
 
         TrajectorySequence traj1 = drive.trajectorySequenceBuilder(startPose)
                 .addDisplacementMarker(() -> {
+
                     //add motor movement
                 })
                 .turn(Math.toRadians(41))
