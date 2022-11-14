@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.opmode.compOpMode.Bases.BaseOpMode;
+
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -22,7 +24,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="hambunger", group="Linear Opmode")
-public class TeleOP_2022_2023 extends LinearOpMode {
+public class TeleOP_2022_2023 extends BaseOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -99,14 +101,24 @@ public class TeleOP_2022_2023 extends LinearOpMode {
             telemetry.addData("Rear Dead Encoder", drive_RL.getCurrentPosition());
             telemetry.update();
 
+            double y_stick = gamepad1.left_stick_y;
+            double x_stick = gamepad1.left_stick_x;
+
+            //Field Orientation Code
+            double pi = 3.1415926;
+            double gyro_degrees = navx_centered.getYaw();
+            double gyro_radians = gyro_degrees * pi/180;
+            double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
+            x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians);
+
             //Mecanum Drive Code
-            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
+            double r = Math.hypot(x_stick, y_stick);
+            double robotAngle = Math.atan2(y_stick, -x_stick) - Math.PI / 4;
             double rightX = -gamepad1.right_stick_x;
-            final double v1 = r * Math.cos(robotAngle) + rightX;
-            final double v2 = r * Math.sin(robotAngle) - rightX;
-            final double v3 = r * Math.sin(robotAngle) + rightX;
-            final double v4 = r * Math.cos(robotAngle) - rightX;
+            final double v1 = (r * Math.cos(robotAngle) + rightX);
+            final double v2 = (r * Math.sin(robotAngle) - rightX);
+            final double v3 = (r * Math.sin(robotAngle) + rightX);
+            final double v4 = (r * Math.cos(robotAngle) - rightX);
 
             drive_FL.setPower(v1 * SD);
             drive_RL.setPower(v3 * SD);

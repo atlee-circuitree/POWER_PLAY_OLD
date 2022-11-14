@@ -5,6 +5,7 @@ repositories {
     maven { url = 'https://maven.brott.dev/' }
     flatDir {
         dirs rootProject.file('libs')
+        dirs 'libs', 'C:\\Users\\atlee\\Documents\\GitHub\\POWER_PLAY_REAL_ONE\\navx-micro'
     }
 }
 
@@ -22,4 +23,5 @@ dependencies {
     implementation 'org.firstinspires.ftc:gameAssets-PowerPlay:1.0.0'
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.5'
+    implementation (name:'navx_ftc-release', ext:'aar')
 }
