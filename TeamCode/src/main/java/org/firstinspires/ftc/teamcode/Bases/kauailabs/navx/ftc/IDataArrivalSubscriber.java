@@ -22,7 +22,7 @@
  ===============================================
  */
 
-package org.firstinspires.ftc.teamcode.kauailabs.navx.ftc;
+package org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.ftc;
 
 /**
  * The IDataArrivalSubscriber interface provides a method for consumers

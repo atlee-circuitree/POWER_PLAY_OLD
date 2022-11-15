@@ -21,7 +21,7 @@
  THE SOFTWARE.
  ===============================================
  */
-package org.firstinspires.ftc.teamcode.kauailabs.navx;
+package org.firstinspires.ftc.teamcode.Bases.kauailabs.navx;
 
 public class IMURegisters {
 
