@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Bases;
+package org.firstinspires.ftc.teamcode.drive.opmode.Bases;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.ftc.AHRS;
+import org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.ftc.AHRS;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;

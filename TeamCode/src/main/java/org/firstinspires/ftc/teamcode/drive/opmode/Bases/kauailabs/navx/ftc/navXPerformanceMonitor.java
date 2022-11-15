@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.ftc;
+package org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.ftc;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 

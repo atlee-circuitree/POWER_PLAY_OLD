@@ -5,14 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.opmode.Bases.BaseOpMode;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name ="Blue Auto Right", group = "drive")
-public class BlueAutoRight extends LinearOpMode {
+public class BlueAutoRight extends BaseOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        GetHardware();
 
         //The coordinates are measured in inches from the center of the robot/odometry wheels
         Pose2d startPose = new Pose2d(35, 60, Math.toRadians(270));

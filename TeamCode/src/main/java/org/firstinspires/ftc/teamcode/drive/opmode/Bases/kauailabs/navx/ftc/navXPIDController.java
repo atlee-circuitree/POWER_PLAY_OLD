@@ -21,7 +21,7 @@
  THE SOFTWARE.
  ===============================================
  */
-package org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.ftc;
+package org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.ftc;
 
 /**
  * The navXPIDController implements a timestamped PID controller (designed to deal

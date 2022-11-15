@@ -21,13 +21,13 @@
  THE SOFTWARE.
  ===============================================
  */
-package org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.ftc;
+package org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.ftc;
 
 import java.util.Arrays;
 
-import org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.AHRSProtocol;
-import org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.IMURegisters;
-import org.firstinspires.ftc.teamcode.Bases.kauailabs.navx.IMUProtocol;
+import org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.AHRSProtocol;
+import org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.IMURegisters;
+import org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.IMUProtocol;
 
 import android.os.Process;
 import android.os.SystemClock;
