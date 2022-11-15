@@ -70,9 +70,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx frontLeft, backLeft, backRight, frontRight;
+    private DcMotorEx frontLeft, rearLeft, rearRight, frontRight;
     private List<DcMotorEx> motors;
-    private DcMotor vertiArm = null;
+    private DcMotor vertArm = null;
     private DcMotor horizArm = null;
     private DcMotor angleArm = null;
     private Servo horizClaw = null;
@@ -127,21 +127,21 @@ public class SampleMecanumDrive extends MecanumDrive {
 
 
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        rearLeft = hardwareMap.get(DcMotorEx.class, "rearLeft");
+        rearRight = hardwareMap.get(DcMotorEx.class, "rearRight");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        vertiArm = hardwareMap.get(DcMotor.class, "vertiArm");
-        horizArm = hardwareMap.get(DcMotorEx.class, "horizarm");
+        vertArm = hardwareMap.get(DcMotor.class, "vertiArm");
+        horizArm = hardwareMap.get(DcMotorEx.class, "horizArm");
         angleArm = hardwareMap.get(DcMotorEx.class, "angleArm");
 
         horizClaw = hardwareMap.get(Servo.class, "horizClaw");
         transferClaw = hardwareMap.get(Servo.class, "transferClaw");
-        transferArm = hardwareMap.get(Servo.class, "transferarm");
+        transferArm = hardwareMap.get(Servo.class, "transferArm");
 
 
 
-        motors = Arrays.asList(frontLeft, backLeft, backRight, frontRight);
+        motors = Arrays.asList(frontLeft, rearLeft, rearRight, frontRight);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -162,7 +162,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // TODO: reverse any motors using DcMotor.setDirection()
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -311,8 +311,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
         frontLeft.setPower(v);
-        backLeft.setPower(v1);
-        backRight.setPower(v2);
+        rearLeft.setPower(v1);
+        rearRight.setPower(v2);
         frontRight.setPower(v3);
     }
 

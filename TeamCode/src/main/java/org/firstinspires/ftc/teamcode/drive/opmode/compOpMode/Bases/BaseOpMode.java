@@ -4,13 +4,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -18,7 +15,7 @@ import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+
 import java.text.DecimalFormat;
 
 /**
@@ -31,16 +28,29 @@ public abstract class BaseOpMode extends LinearOpMode {
     // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
 
-    public DcMotor drive_FL = null;
-    public DcMotor drive_RL = null;
-    public DcMotor drive_FR = null;
-    public DcMotor drive_RR = null;
+    public DcMotor frontLeft = null;
+    public DcMotor rearLeft = null;
+    public DcMotor frontRight = null;
+    public DcMotor rearRight = null;
+    public DcMotor vertArm = null;
+    public DcMotor horizArm = null;
+    public DcMotor angleArm = null;
 
+    public Servo horizClaw = null;
+    public Servo transferArm = null;
+    public Servo transferClaw = null;
 
     public DistanceSensor LS_distance;
     public DistanceSensor RS_distance;
     public DistanceSensor RL_distance;
     public DistanceSensor RR_distance;
+
+    public double SD = 1;
+    public double SA = 1;
+
+    //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
+    public final static double ARM_MIN_RANGE = 0.46;
+    public final static double ARM_MAX_RANGE = 0.53;
 
     public AHRS navx_centered;
 
@@ -83,10 +93,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         // step (using the FTC Robot Controller app on the phone).
         getCenteredNavXValues();
         //Motor and Servo Variables
-        drive_FL = hardwareMap.get(DcMotor.class, "drive_FL");
-        drive_RL = hardwareMap.get(DcMotor.class, "drive_RL");
-        drive_FR = hardwareMap.get(DcMotor.class, "drive_FR");
-        drive_RR = hardwareMap.get(DcMotor.class, "drive_RR");
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        rearLeft = hardwareMap.get(DcMotor.class, "rearLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        rearRight = hardwareMap.get(DcMotor.class, "rearRight");
 
         LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");
@@ -95,22 +105,27 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        drive_FL.setDirection(DcMotor.Direction.FORWARD);
-        drive_RL.setDirection(DcMotor.Direction.FORWARD);
-        drive_FR.setDirection(DcMotor.Direction.REVERSE);
-        drive_RR.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        rearLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        rearRight.setDirection(DcMotor.Direction.REVERSE);
 
         SetDriveMode(Mode.STOP_RESET_ENCODER);
 
-        drive_FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_RL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_RR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        horizArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vertArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        angleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+          /*horizArm.setDirection(DcMotor.Direction.REVERSE);
+       vertiArm.setDirection(DcMotor.Direction.FORWARD);
+       angleArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
 
         SetDriveMode(Mode.RUN_WITH_ENCODER);
-
-        //GetIMU();
-
     }
 
 
@@ -208,33 +223,33 @@ public abstract class BaseOpMode extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * COUNTS_PER_INCH);
 
-            FLTarget = drive_FL.getCurrentPosition() + moveCounts;
-            RLTarget = drive_RL.getCurrentPosition() + moveCounts;
-            FRTarget = drive_FR.getCurrentPosition() + moveCounts;
-            RRTarget = drive_RR.getCurrentPosition() + moveCounts;
+            FLTarget = frontLeft.getCurrentPosition() + moveCounts;
+            RLTarget = rearLeft.getCurrentPosition() + moveCounts;
+            FRTarget = frontRight.getCurrentPosition() + moveCounts;
+            RRTarget = rearRight.getCurrentPosition() + moveCounts;
 
             // Set Target and Turn On RUN_TO_POSITION
-            drive_FL.setTargetPosition(FLTarget);
-            drive_FR.setTargetPosition(FRTarget);
-            drive_RL.setTargetPosition(RLTarget);
-            drive_RR.setTargetPosition(RRTarget);
+            frontLeft.setTargetPosition(FLTarget);
+            frontRight.setTargetPosition(FRTarget);
+            rearLeft.setTargetPosition(RLTarget);
+            rearRight.setTargetPosition(RRTarget);
 
-            drive_FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            drive_FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            drive_RL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            drive_RR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rearLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rearRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
 
-            drive_FL.setPower(speed);
-            drive_FR.setPower(speed);
-            drive_RL.setPower(speed);
-            drive_RR.setPower(speed);
+            frontLeft.setPower(speed);
+            frontRight.setPower(speed);
+            rearLeft.setPower(speed);
+            rearRight.setPower(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (drive_FL.isBusy() && drive_FR.isBusy() && drive_RL.isBusy() && drive_RR.isBusy())) {
+                    (frontLeft.isBusy() && frontRight.isBusy() && rearLeft.isBusy() && rearRight.isBusy())) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -269,31 +284,31 @@ public abstract class BaseOpMode extends LinearOpMode {
                     RLSpeed /= max;
                 }
 //prostate test :)
-                drive_FL.setPower(FLSpeed);
-                drive_FR.setPower(FRSpeed);
-                drive_RL.setPower(RLSpeed);
-                drive_RR.setPower(RRSpeed);
+                frontLeft.setPower(FLSpeed);
+                frontRight.setPower(FRSpeed);
+                rearLeft.setPower(RLSpeed);
+                rearRight.setPower(RRSpeed);
 
                 // Display drive status for the driver.
                 telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
                 telemetry.addData("Target",  "%7d:%7d",      FLTarget,  FRTarget, RLTarget, RRTarget);
-                telemetry.addData("Actual",  "%7d:%7d",      drive_FL.getCurrentPosition(),
-                        drive_FR.getCurrentPosition());
+                telemetry.addData("Actual",  "%7d:%7d",      frontLeft.getCurrentPosition(),
+                        frontRight.getCurrentPosition());
                 telemetry.addData("Speed",   "%5.2f:%5.2f",  FLSpeed, FRSpeed, RLSpeed, RRSpeed);
                 telemetry.update();
             }
 
             // Stop all motion;
-            drive_FL.setPower(0);
-            drive_FR.setPower(0);
-            drive_RL.setPower(0);
-            drive_RR.setPower(0);
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+            rearLeft.setPower(0);
+            rearRight.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            drive_FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            drive_FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            drive_RL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            drive_RR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -340,10 +355,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         }
 
         // Stop all motion;
-        drive_FL.setPower(0);
-        drive_FR.setPower(0);
-        drive_RL.setPower(0);
-        drive_RR.setPower(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        rearLeft.setPower(0);
+        rearRight.setPower(0);
     }
 
     /**
@@ -385,10 +400,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         }
 
         // Send desired speeds to motors.
-        drive_FL.setPower(FLSpeed);
-        drive_FR.setPower(FRSpeed);
-        drive_RL.setPower(RLSpeed);
-        drive_RR.setPower(RRSpeed);
+        frontLeft.setPower(FLSpeed);
+        frontRight.setPower(FRSpeed);
+        rearLeft.setPower(RLSpeed);
+        rearRight.setPower(RRSpeed);
 
         // Display it for the driver.
         telemetry.addData("Target", "%5.2f", angle);
@@ -447,10 +462,10 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     public void DriveTrain (Drive Stop){
         if (Stop == Drive.STOP) {
-            drive_FL.setPower(0);
-            drive_FR.setPower(0);
-            drive_RL.setPower(0);
-            drive_RR.setPower(0);
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+            rearLeft.setPower(0);
+            rearRight.setPower(0);
         }
     }
 
@@ -462,27 +477,27 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         if (DriveMode == Mode.STOP_RESET_ENCODER) {
 
-            drive_FL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            drive_FR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            drive_RL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            drive_RR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         }
         if (DriveMode == Mode.RUN_WITH_ENCODER) {
 
-            drive_FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            drive_FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            drive_RL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            drive_RR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
         if (DriveMode == Mode.RUN_WITHOUT_ENCODERS) {
 
-            drive_FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            drive_FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            drive_RL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            drive_RR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rearLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         }
 

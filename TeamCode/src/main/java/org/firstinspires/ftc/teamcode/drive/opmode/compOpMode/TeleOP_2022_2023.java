@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.compOpMode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,66 +24,10 @@ import org.firstinspires.ftc.teamcode.drive.opmode.compOpMode.Bases.BaseOpMode;
 @TeleOp(name="hambunger", group="Linear Opmode")
 public class TeleOP_2022_2023 extends BaseOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor drive_FL = null;
-    private DcMotor drive_RL = null;
-    private DcMotor drive_FR = null;
-    private DcMotor drive_RR = null;
-    private DcMotor vertiArm = null;
-    private DcMotor horizArm = null;
-    private DcMotor angleArm = null;
-    private Servo horizClaw = null;
-    private Servo transferClaw = null;
-    private Servo transferArm = null;
-
-    //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back
-    public final static double ARM_MIN_RANGE = 0.46;
-    public final static double ARM_MAX_RANGE = 0.53;
-
-    //double armTurnPosition = ARM_DEFAULT;
     @Override
     public void runOpMode() {
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        drive_FL = hardwareMap.get(DcMotor.class, "drive_FL");
-        drive_RL = hardwareMap.get(DcMotor.class, "drive_RL");
-        drive_FR = hardwareMap.get(DcMotor.class, "drive_FR");
-        drive_RR = hardwareMap.get(DcMotor.class, "drive_RR");
-
-        //armTurn.setPosition(ARM_DEFAULT); //Unslash this if you want armTurn servo using joystick back
-
-        //Slow Mode Variables
-
-        double SD = 1;
-        double SA = 1;
-
-        //Arm Turn Variables
-        //double armTurn = ARM_DEFAULT;  //Unslash this if you want armTurn servo using joystick back
-        final double ARM_SPEED = 0.005;
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the batter;
-        drive_FL.setDirection(DcMotor.Direction.FORWARD);
-        drive_RL.setDirection(DcMotor.Direction.FORWARD);
-        drive_FR.setDirection(DcMotor.Direction.REVERSE);
-        drive_RR.setDirection(DcMotor.Direction.REVERSE);
-
-        //Drive Modes
-        drive_FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_RL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drive_RR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        horizArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        vertiArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        angleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-          /*horizArm.setDirection(DcMotor.Direction.REVERSE);
-       vertiArm.setDirection(DcMotor.Direction.FORWARD);
-       angleArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
+        GetHardware();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -96,13 +38,13 @@ public class TeleOP_2022_2023 extends BaseOpMode {
 
             //Show encoder values on the phone
             telemetry.addData("Status", "Initialized");
-            telemetry.addData("Left Dead Encoder", drive_FL.getCurrentPosition());
-            telemetry.addData("Right Dead Encoder", drive_RR.getCurrentPosition());
-            telemetry.addData("Rear Dead Encoder", drive_RL.getCurrentPosition());
+            telemetry.addData("Left Dead Encoder", frontLeft.getCurrentPosition());
+            telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
+            telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
             telemetry.update();
 
-            double y_stick = gamepad1.left_stick_y;
-            double x_stick = gamepad1.left_stick_x;
+            double y_stick = gamepad2.left_stick_y;
+            double x_stick = gamepad2.left_stick_x;
 
             //Field Orientation Code
             double pi = 3.1415926;
@@ -114,25 +56,32 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             //Mecanum Drive Code
             double r = Math.hypot(x_stick, y_stick);
             double robotAngle = Math.atan2(y_stick, -x_stick) - Math.PI / 4;
-            double rightX = -gamepad1.right_stick_x;
+            double rightX = -gamepad2.right_stick_x;
             final double v1 = (r * Math.cos(robotAngle) + rightX);
             final double v2 = (r * Math.sin(robotAngle) - rightX);
             final double v3 = (r * Math.sin(robotAngle) + rightX);
             final double v4 = (r * Math.cos(robotAngle) - rightX);
 
-            drive_FL.setPower(v1 * SD);
-            drive_RL.setPower(v3 * SD);
-            drive_FR.setPower(v2 * SD);
-            drive_RR.setPower(v4 * SD);
+            frontLeft.setPower(v1 * SD);
+            rearLeft.setPower(v3 * SD);
+            frontRight.setPower(v2 * SD);
+            rearRight.setPower(v4 * SD);
 
-            //Controller 1
-            if (gamepad1.left_stick_button) {
+            //Controller 1 Auto Tele-op
+            //do auto tele-op code here
+
+            //Controller 2 Manual Tele-op
+            //Slows movement
+            if (gamepad2.left_stick_button) {
                 SD = .25;
             } else {
                 SD = 1;
             }
 
-            //Controller 2
+            //Resets NavX heading
+            if (gamepad2.back) {
+                zeroGyro();
+            }
 
             //Extends and Retracts horizArm
             if (gamepad2.x) {
@@ -154,11 +103,11 @@ public class TeleOP_2022_2023 extends BaseOpMode {
 
             //Moves vertArm up and down
             if (gamepad2.dpad_up){
-                vertiArm.setPower(.2);
+                vertArm.setPower(.2);
             } else if (gamepad2.dpad_down) {
-                vertiArm.setPower(-.2);
+                vertArm.setPower(-.2);
             } else {
-                vertiArm.setPower(0);
+                vertArm.setPower(0);
             }
 
             //Opens and Closes Transfer Claw
@@ -170,7 +119,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 transferClaw.setPosition(0);
             }
 
-            //Moves anglearm up and down
+            //Moves angleArm up and down
             if (gamepad2.right_trigger > .5 ) {
                 angleArm.setPower(.2);
             } else if (gamepad2.left_trigger > .5) {
