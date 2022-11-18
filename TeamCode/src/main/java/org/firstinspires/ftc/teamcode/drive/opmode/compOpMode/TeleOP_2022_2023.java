@@ -41,7 +41,12 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("Left Dead Encoder", frontLeft.getCurrentPosition());
             telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
             telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
+            telemetry.addData("HorizArm Amount Extended", horizArm.getCurrentPosition());
+            telemetry.addData("VertArm Amount Extended", horizArm.getCurrentPosition());
+            telemetry.addData("HorizArm Amount Extended", horizArm.getCurrentPosition());
             telemetry.update();
+
+            double horizPower = PIDControl(1000, horizArm.getVelocity());
 
             double y_stick = gamepad2.left_stick_y;
             double x_stick = gamepad2.left_stick_x;
@@ -68,7 +73,14 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             rearRight.setPower(v4 * SD);
 
             //Controller 1 Auto Tele-op
-            //do auto tele-op code here
+            //Does arm movements and extensions automatically
+            /*if (gamepad1.a) {
+                horizArm.setPower(horizPower);
+            } else if (gamepad1.a) {
+                horizArm.setPower(horizPower);
+                }
+            }*/
+
 
             //Controller 2 Manual Tele-op
             //Slows movement
@@ -128,14 +140,5 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 angleArm.setPower(0);
             }
         }
-    }
-
-    public int degreesBore(int input) {
-
-        final int COUNTS_PER_BORE_MOTOR_REV = 8192;    // eg: GOBUILDA Motor Encoder
-        int COUNTS_TICKS_PER_REV_PER_DEGREE = (COUNTS_PER_BORE_MOTOR_REV) / 360 * 2;
-
-        return COUNTS_TICKS_PER_REV_PER_DEGREE * input;
-
     }
 }

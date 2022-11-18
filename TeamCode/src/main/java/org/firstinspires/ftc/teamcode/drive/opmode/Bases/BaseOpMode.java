@@ -5,6 +5,8 @@ import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import com.qualcomm.robotcore.hardware.Servo;
@@ -32,9 +34,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor rearLeft = null;
     public DcMotor frontRight = null;
     public DcMotor rearRight = null;
-    public DcMotor vertArm = null;
-    public DcMotor horizArm = null;
-    public DcMotor angleArm = null;
+    public DcMotorEx vertArm = null;
+    public DcMotorEx horizArm = null;
+    public DcMotorEx angleArm = null;
 
     public Servo horizClaw = null;
     public Servo transferArm = null;
@@ -47,6 +49,13 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     public double SD = 1;
     public double SA = 1;
+    public double kP = 0;
+    public double kI = 0;
+    public double kD = 0;
+    public double integralSum = 0;
+    public double lastError = 0;
+
+    ElapsedTime timer = new ElapsedTime();
 
     //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
     public final static double ARM_MIN_RANGE = 0.46;
@@ -85,7 +94,17 @@ public abstract class BaseOpMode extends LinearOpMode {
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
 
+    public double PIDControl(double reference, double state) { //reference = ticks per second
+        double error = reference -state;
+        integralSum += error * timer.seconds();
+        double derivative = (error - lastError) / timer.seconds();
+        lastError = error;
 
+        timer.reset();
+
+        double output = (error * kP) + (derivative * kD) + (integralSum * kI);
+        return output;
+    }
 
     public void GetHardware() {
         // Initialize the hardware variables. Note that the strings used here as parameters
@@ -97,6 +116,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         rearLeft = hardwareMap.get(DcMotor.class, "rearLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         rearRight = hardwareMap.get(DcMotor.class, "rearRight");
+
+        horizArm = hardwareMap.get(DcMotorEx.class, "horizArm");
+        vertArm = hardwareMap.get(DcMotorEx.class, "vertArm");
+        angleArm = hardwareMap.get(DcMotorEx.class, "angleArm");
 
         LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");
@@ -110,6 +133,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         rearRight.setDirection(DcMotor.Direction.REVERSE);
 
+          /*horizArm.setDirection(DcMotor.Direction.REVERSE);
+       vertiArm.setDirection(DcMotor.Direction.FORWARD);
+       angleArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
+
         SetDriveMode(Mode.STOP_RESET_ENCODER);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -121,9 +148,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         vertArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         angleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-          /*horizArm.setDirection(DcMotor.Direction.REVERSE);
-       vertiArm.setDirection(DcMotor.Direction.FORWARD);
-       angleArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
+        horizArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vertArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        angleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         SetDriveMode(Mode.RUN_WITH_ENCODER);
     }
@@ -155,6 +182,17 @@ public abstract class BaseOpMode extends LinearOpMode {
         telemetry.addData("IMU", "calibrated");
         telemetry.update();
     }
+
+    public int degreesBore(int input) {
+
+        final int COUNTS_PER_BORE_MOTOR_REV = 8192;    // eg: GOBUILDA Motor Encoder
+        int COUNTS_TICKS_PER_REV_PER_DEGREE = (COUNTS_PER_BORE_MOTOR_REV) / 360 * 2;
+
+        return COUNTS_TICKS_PER_REV_PER_DEGREE * input;
+
+    }
+
+
 /*
     public void getGyro() {
 
