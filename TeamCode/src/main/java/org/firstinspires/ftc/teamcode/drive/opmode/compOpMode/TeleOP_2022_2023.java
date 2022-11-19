@@ -41,9 +41,15 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("Left Dead Encoder", frontLeft.getCurrentPosition());
             telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
             telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
-            telemetry.addData("HorizArm Amount Extended", horizArm.getCurrentPosition());
-            telemetry.addData("VertArm Amount Extended", horizArm.getCurrentPosition());
-            telemetry.addData("HorizArm Amount Extended", horizArm.getCurrentPosition());
+
+            telemetry.addData("Horiz Arm Amount Extended", horizArm.getCurrentPosition());
+            telemetry.addData("Vert Arm Amount Extended", vertArm.getCurrentPosition());
+            telemetry.addData("Angle Arm Amount Extended", angleArm.getCurrentPosition());
+
+            telemetry.addData("Horiz Claw", rearLeft.getCurrentPosition());
+            telemetry.addData("Transfer Claw", transferClaw.getPosition());
+            telemetry.addData("Transfer Arm Top", transferArmTop.getPosition());
+            telemetry.addData("Transfer Arm Bottom", transferArmBotttom.getPosition());
             telemetry.update();
 
             double horizPower = PIDControl(1000, horizArm.getVelocity()); //reference = ticks per second
@@ -100,10 +106,13 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             //Extends and Retracts horizArm
             if (gamepad2.x) {
                 horizArm.setPower(.2);
+                vertArm.setPower(.2);
             } else if (gamepad2.a) {
                 horizArm.setPower(-.2);
+                vertArm.setPower(-.2);
             } else {
                 horizArm.setPower(0);
+                vertArm.setPower(0);
             }
 
             //Opens and Closes claw
@@ -113,15 +122,6 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 horizClaw.setPosition(-.2);
             } else {
                 horizClaw.setPosition(0);
-            }
-
-            //Moves vertArm up and down
-            if (gamepad2.dpad_up){
-                vertArm.setPower(.2);
-            } else if (gamepad2.dpad_down) {
-                vertArm.setPower(-.2);
-            } else {
-                vertArm.setPower(0);
             }
 
             //Opens and Closes Transfer Claw
@@ -140,6 +140,16 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 angleArm.setPower(-.2);
             } else {
                 angleArm.setPower(0);
+            }
+            //Moves transferArmBottom and transferArmTop to front
+            if(gamepad2.dpad_up) {
+                transferArmBotttom.setPosition(.5);
+                transferArmTop.setPosition(.5);
+            }
+            //Moves transferArmBottom and transferArmTop to back
+            if (gamepad2.dpad_down){
+                transferArmBotttom.setPosition(.2);
+                transferArmTop.setPosition(.2);
             }
         }
     }
