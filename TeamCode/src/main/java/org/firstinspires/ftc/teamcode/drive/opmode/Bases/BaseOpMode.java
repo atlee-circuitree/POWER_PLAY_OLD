@@ -46,10 +46,10 @@ public abstract class BaseOpMode extends LinearOpMode {
     public Servo transferArmTop = null;
     public Servo transferArmBotttom = null;
 
-    public DistanceSensor LS_distance;
+    /*public DistanceSensor LS_distance;
     public DistanceSensor RS_distance;
     public DistanceSensor RL_distance;
-    public DistanceSensor RR_distance;
+    public DistanceSensor RR_distance;*/
 
     public double SD = 1;
     public double SA = 1;
@@ -59,7 +59,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
 
-    //public static int vertArmTarget = 0;
+    public static int vertArmTarget = 0;
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
     //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
@@ -120,10 +120,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         transferArmTop = hardwareMap.get(Servo.class, "transferArmTop");
         transferArmBotttom = hardwareMap.get(Servo.class, "transferArmBottom");
 
-        LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
+        /*LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");
         RL_distance = hardwareMap.get(DistanceSensor.class, "RL_distance");
-        RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");
+        RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");*/
 
         controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -323,7 +323,6 @@ public abstract class BaseOpMode extends LinearOpMode {
                     RRSpeed /= max;
                     RLSpeed /= max;
                 }
-//prostate test :)
                 frontLeft.setPower(FLSpeed);
                 frontRight.setPower(FRSpeed);
                 rearLeft.setPower(RLSpeed);
