@@ -39,8 +39,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotorEx angleArm = null;
 
     public Servo horizClaw = null;
-    public Servo transferArm = null;
     public Servo transferClaw = null;
+    public Servo transferArmTop = null;
+    public Servo transferArmBotttom = null;
 
     public DistanceSensor LS_distance;
     public DistanceSensor RS_distance;
@@ -120,6 +121,11 @@ public abstract class BaseOpMode extends LinearOpMode {
         horizArm = hardwareMap.get(DcMotorEx.class, "horizArm");
         vertArm = hardwareMap.get(DcMotorEx.class, "vertArm");
         angleArm = hardwareMap.get(DcMotorEx.class, "angleArm");
+
+        horizClaw = hardwareMap.get(Servo.class, "horizClaw");
+        transferClaw = hardwareMap.get(Servo.class, "transferClaw");
+        transferArmTop = hardwareMap.get(Servo.class, "transferArmTop");
+        transferArmBotttom = hardwareMap.get(Servo.class, "transferArmBottom");
 
         LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");

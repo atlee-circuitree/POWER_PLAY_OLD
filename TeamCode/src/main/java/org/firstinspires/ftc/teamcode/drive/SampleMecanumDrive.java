@@ -77,7 +77,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     private DcMotor angleArm = null;
     private Servo horizClaw = null;
     private Servo transferClaw = null;
-    private Servo transferArm = null;
+    public Servo transferArmTop = null;
+    public Servo transferArmBotttom = null;
 
     private BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -137,7 +138,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         horizClaw = hardwareMap.get(Servo.class, "horizClaw");
         transferClaw = hardwareMap.get(Servo.class, "transferClaw");
-        transferArm = hardwareMap.get(Servo.class, "transferArm");
+        transferArmTop = hardwareMap.get(Servo.class, "transferArmTop");
+        transferArmBotttom = hardwareMap.get(Servo.class, "transferArmBottom");
 
 
 

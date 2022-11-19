@@ -46,7 +46,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("HorizArm Amount Extended", horizArm.getCurrentPosition());
             telemetry.update();
 
-            double horizPower = PIDControl(1000, horizArm.getVelocity());
+            double horizPower = PIDControl(1000, horizArm.getVelocity()); //reference = ticks per second
 
             double y_stick = gamepad2.left_stick_y;
             double x_stick = gamepad2.left_stick_x;
@@ -71,6 +71,8 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             rearLeft.setPower(v3 * SD);
             frontRight.setPower(v2 * SD);
             rearRight.setPower(v4 * SD);
+
+
 
             //Controller 1 Auto Tele-op
             //Does arm movements and extensions automatically
