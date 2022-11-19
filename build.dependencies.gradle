@@ -4,7 +4,7 @@ repositories {
     jcenter()  // Needed for tensorflow-lite
     flatDir {
         dirs rootProject.file('libs')
-        dirs 'libs', 'C:\\Users\\atlee\\Documents\\GitHub\\POWER_PLAY_REAL_ONE\\navx-micro'
+        dirs 'libs', 'C:\\Users\\atlee\\navx-micro\\android\\libs'
     }
     maven { url = 'https://maven.brott.dev/' }
 }

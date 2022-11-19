@@ -124,6 +124,7 @@ android {
 repositories {
     flatDir {
         dirs rootProject.file('libs')
+        dirs 'libs', 'C:\\Users\\atlee\\navx-micro\\android\\libs'
     }
     mavenCentral()
 }

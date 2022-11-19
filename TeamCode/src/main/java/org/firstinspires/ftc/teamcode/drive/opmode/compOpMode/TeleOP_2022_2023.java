@@ -38,14 +38,14 @@ public class TeleOP_2022_2023 extends BaseOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            controller.setPID(p, i, d);
+           /* controller.setPID(p, i, d);
             int vertArmPos = vertArm.getCurrentPosition();
             double pid = controller.calculate((vertArmPos), vertArmTarget);
             double ff = Math.cos(Math.toRadians(vertArmTarget / ticks_in_degrees)) * f;
 
             double vertArmPower = pid + ff;
 
-            vertArm.setPower(vertArmPower);
+            vertArm.setPower(vertArmPower);*/
 
             double y_stick = gamepad2.left_stick_y;
             double x_stick = gamepad2.left_stick_x;
@@ -86,17 +86,17 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("Transfer Arm Top", transferArmTop.getPosition());
             telemetry.addData("Transfer Arm Bottom", transferArmBotttom.getPosition());
 
-            telemetry.addData("Vert Arm Pos", vertArmPos);
-            telemetry.addData("Vert Arm Target", vertArmTarget);
+            //telemetry.addData("Vert Arm Pos", vertArmPos);
+            //telemetry.addData("Vert Arm Target", vertArmTarget);
             telemetry.update();
 
 
 
             //Controller 1 Auto Tele-op
             //Does arm movements and extensions automatically
-            if (gamepad1.a) {
+            /*if (gamepad1.a) {
                 vertArm.setPower(vertArmPower);
-            }
+            }*/
 
 
             //Controller 2 Manual Tele-op
@@ -114,14 +114,14 @@ public class TeleOP_2022_2023 extends BaseOpMode {
 
             //Extends and Retracts horizArm
             if (gamepad2.x) {
-                horizArm.setPower(.2);
-                //vertArm.setPower(.2);
+                //horizArm.setPower(.2);
+                vertArm.setPower(.2);
             } else if (gamepad2.a) {
-                horizArm.setPower(-.2);
-               // vertArm.setPower(-.2);
+                //horizArm.setPower(-.2);
+                vertArm.setPower(-.2);
             } else {
-                horizArm.setPower(0);
-               // vertArm.setPower(0);
+                //horizArm.setPower(0);
+                vertArm.setPower(0);
             }
 
             //Opens and Closes claw

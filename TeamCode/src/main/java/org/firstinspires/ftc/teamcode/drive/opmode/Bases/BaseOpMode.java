@@ -59,7 +59,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
 
-    public static int vertArmTarget = 0;
+    //public static int vertArmTarget = 0;
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
     //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
