@@ -2,11 +2,11 @@ repositories {
     mavenCentral()
     google() // Needed for androidx
     jcenter()  // Needed for tensorflow-lite
-    maven { url = 'https://maven.brott.dev/' }
     flatDir {
         dirs rootProject.file('libs')
         dirs 'libs', 'C:\\Users\\atlee\\Documents\\GitHub\\POWER_PLAY_REAL_ONE\\navx-micro'
     }
+    maven { url = 'https://maven.brott.dev/' }
 }
 
 dependencies {

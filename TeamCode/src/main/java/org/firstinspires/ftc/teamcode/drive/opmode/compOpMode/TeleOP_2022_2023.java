@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.compOpMode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.drive.opmode.Bases.BaseOpMode;
 
 /**
@@ -21,9 +23,9 @@ import org.firstinspires.ftc.teamcode.drive.opmode.Bases.BaseOpMode;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+@Config
 @TeleOp(name="hambunger", group="Linear Opmode")
 public class TeleOP_2022_2023 extends BaseOpMode {
-
     @Override
     public void runOpMode() {
 
@@ -36,23 +38,14 @@ public class TeleOP_2022_2023 extends BaseOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //Show encoder values on the phone
-            telemetry.addData("Status", "Initialized");
-            telemetry.addData("Left Dead Encoder", frontLeft.getCurrentPosition());
-            telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
-            telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
+            controller.setPID(p, i, d);
+            int vertArmPos = vertArm.getCurrentPosition();
+            double pid = controller.calculate((vertArmPos), vertArmTarget);
+            double ff = Math.cos(Math.toRadians(vertArmTarget / ticks_in_degrees)) * f;
 
-            telemetry.addData("Horiz Arm Amount Extended", horizArm.getCurrentPosition());
-            telemetry.addData("Vert Arm Amount Extended", vertArm.getCurrentPosition());
-            telemetry.addData("Angle Arm Amount Extended", angleArm.getCurrentPosition());
+            double vertArmPower = pid + ff;
 
-            telemetry.addData("Horiz Claw", rearLeft.getCurrentPosition());
-            telemetry.addData("Transfer Claw", transferClaw.getPosition());
-            telemetry.addData("Transfer Arm Top", transferArmTop.getPosition());
-            telemetry.addData("Transfer Arm Bottom", transferArmBotttom.getPosition());
-            telemetry.update();
-
-            double horizPower = PIDControl(1000, horizArm.getVelocity()); //reference = ticks per second
+            vertArm.setPower(vertArmPower);
 
             double y_stick = gamepad2.left_stick_y;
             double x_stick = gamepad2.left_stick_x;
@@ -78,16 +71,32 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             frontRight.setPower(v2 * SD);
             rearRight.setPower(v4 * SD);
 
+            //Show encoder values on the phone
+            telemetry.addData("Status", "Initialized");
+            telemetry.addData("Left Dead Encoder", frontLeft.getCurrentPosition());
+            telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
+            telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
+
+            telemetry.addData("Horiz Arm Amount Extended", horizArm.getCurrentPosition());
+            telemetry.addData("Vert Arm Amount Extended", vertArm.getCurrentPosition());
+            telemetry.addData("Angle Arm Amount Extended", angleArm.getCurrentPosition());
+
+            telemetry.addData("Horiz Claw", rearLeft.getCurrentPosition());
+            telemetry.addData("Transfer Claw", transferClaw.getPosition());
+            telemetry.addData("Transfer Arm Top", transferArmTop.getPosition());
+            telemetry.addData("Transfer Arm Bottom", transferArmBotttom.getPosition());
+
+            telemetry.addData("Vert Arm Pos", vertArmPos);
+            telemetry.addData("Vert Arm Target", vertArmTarget);
+            telemetry.update();
+
 
 
             //Controller 1 Auto Tele-op
             //Does arm movements and extensions automatically
-            /*if (gamepad1.a) {
-                horizArm.setPower(horizPower);
-            } else if (gamepad1.a) {
-                horizArm.setPower(horizPower);
-                }
-            }*/
+            if (gamepad1.a) {
+                vertArm.setPower(vertArmPower);
+            }
 
 
             //Controller 2 Manual Tele-op
@@ -106,13 +115,13 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             //Extends and Retracts horizArm
             if (gamepad2.x) {
                 horizArm.setPower(.2);
-                vertArm.setPower(.2);
+                //vertArm.setPower(.2);
             } else if (gamepad2.a) {
                 horizArm.setPower(-.2);
-                vertArm.setPower(-.2);
+               // vertArm.setPower(-.2);
             } else {
                 horizArm.setPower(0);
-                vertArm.setPower(0);
+               // vertArm.setPower(0);
             }
 
             //Opens and Closes claw

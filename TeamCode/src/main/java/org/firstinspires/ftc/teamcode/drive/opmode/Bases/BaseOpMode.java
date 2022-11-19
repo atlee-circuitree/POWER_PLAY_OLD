@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.Bases;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -50,13 +53,14 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     public double SD = 1;
     public double SA = 1;
-    public double kP = 0;
-    public double kI = 0;
-    public double kD = 0;
-    public double integralSum = 0;
-    public double lastError = 0;
 
-    ElapsedTime timer = new ElapsedTime();
+    public PIDController controller;
+
+    public static double p = 0, i = 0, d = 0;
+    public static double f = 0;
+
+    public static int vertArmTarget = 0;
+    public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
     //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
     public final static double ARM_MIN_RANGE = 0.46;
@@ -95,18 +99,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
 
-    public double PIDControl(double reference, double state) { //reference = ticks per second
-        double error = reference -state;
-        integralSum += error * timer.seconds();
-        double derivative = (error - lastError) / timer.seconds();
-        lastError = error;
-
-        timer.reset();
-
-        double output = (error * kP) + (derivative * kD) + (integralSum * kI);
-        return output;
-    }
-
+    //Initializes hardware
     public void GetHardware() {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -131,6 +124,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");
         RL_distance = hardwareMap.get(DistanceSensor.class, "RL_distance");
         RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");
+
+        controller = new PIDController(p, i, d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
