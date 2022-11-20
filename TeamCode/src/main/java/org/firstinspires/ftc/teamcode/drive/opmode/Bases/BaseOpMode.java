@@ -59,7 +59,17 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
 
-    public static int vertArmTarget = 0;
+    public static double HORIZONTAL_CLAW_OPEN = .5;
+    public static double HORIZONTAL_CLAW_CLOSE = .6;
+    public static double TRANSFER_CLAW_OPEN = .8;
+    public static double TRANSFER_CLAW_CLOSE = .75;
+
+    public static double TRANSFER_ARM_TOP_FRONT = .45;
+    public static double TRANSFER_ARM_TOP_BACK = .2;
+    public static double TRANSFER_ARM_BOTTOM_FRONT = .44;
+    public static double TRANSFER_ARM_BOTTOM_BACK = .66;
+
+    //public static int vertArmTarget = 0;
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
     //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
@@ -146,9 +156,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        horizArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        vertArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        angleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        horizArm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        vertArm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        angleArm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         horizArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vertArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
