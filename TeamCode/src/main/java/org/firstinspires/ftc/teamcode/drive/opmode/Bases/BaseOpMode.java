@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import com.qualcomm.robotcore.hardware.Servo;
@@ -145,9 +146,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         rearRight.setDirection(DcMotor.Direction.REVERSE);
 
-          /*horizArm.setDirection(DcMotor.Direction.REVERSE);
-       vertiArm.setDirection(DcMotor.Direction.FORWARD);
-       angleArm.setDirection(DcMotor.Direction.FORWARD);*/  //we'll find out if we need these
+        vertArm.setDirection(DcMotor.Direction.REVERSE);
 
         SetDriveMode(Mode.STOP_RESET_ENCODER);
 
@@ -201,6 +200,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         int COUNTS_TICKS_PER_REV_PER_DEGREE = (COUNTS_PER_BORE_MOTOR_REV) / 360 * 2;
 
         return COUNTS_TICKS_PER_REV_PER_DEGREE * input;
+
+    }
+
+    public void calculateArmAngle() {
 
     }
 

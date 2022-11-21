@@ -55,8 +55,8 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             double pi = 3.1415926;
             double gyro_degrees = navx_centered.getYaw();
             double gyro_radians = gyro_degrees * pi / 180;
-            double temp = y_stick * Math.cos(gyro_radians) + -x_stick * Math.sin(gyro_radians);
-            x_stick = -y_stick * Math.sin(gyro_radians) + -x_stick * Math.cos(gyro_radians);
+            double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
+            x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians);
 
             /* double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
             x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians); */ //Original code from last year
@@ -121,7 +121,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             }
 
             //Extends and Retracts horizArm
-            if (gamepad2.x) {
+            if (gamepad1.x) {
                 horizArm.setPower(1);
             } else if (gamepad2.a) {
                 horizArm.setPower(-1);
@@ -129,15 +129,6 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 horizArm.setPower(0);
             }
 
-            if (gamepad2.y) {
-                vertArm.setPower(1);
-            } else if (gamepad2.b) {
-                vertArm.setPower(-1);
-            } else {
-                vertArm.setPower(0);
-            }
-
-            //Opens and Closes claw
             //Opens horizClaw
             if (gamepad1.left_bumper) {
                 //horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
@@ -148,7 +139,27 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             if (gamepad1.right_bumper) {
                 //horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
                 horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
+            }
 
+            /*if (gamepad1.y) {
+                angleArm.
+            }*/
+
+                //Moves angleArm up and down
+                if (gamepad1.right_trigger > .5) {
+                    angleArm.setPower(1);
+                } else if (gamepad1.left_trigger > .5) {
+                    angleArm.setPower(-1);
+                } else {
+                    angleArm.setPower(0);
+                }
+
+            if (gamepad2.y) {
+                vertArm.setPower(1);
+            } else if (gamepad2.b) {
+                vertArm.setPower(-1);
+            } else {
+                vertArm.setPower(0);
             }
 
             //Opens and Closes Transfer Claw
@@ -162,31 +173,21 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 transferClaw.setPosition(TRANSFER_CLAW_CLOSE);
             }
 
-            //Moves angleArm up and down
-            if (gamepad2.right_trigger > .5) {
-                angleArm.setPower(1);
-            } else if (gamepad2.left_trigger > .5) {
-                angleArm.setPower(-1);
-            } else {
-                angleArm.setPower(0);
-            }
-
             //Moves transferArmBottom to front
             if (gamepad2.dpad_up) {
                 transferArmBotttom.setPosition(TRANSFER_ARM_BOTTOM_FRONT);
             }
 
             //Moves transferArmBottom to back
-            if (gamepad1.dpad_down) {
-
-                transferArmBotttom.setPosition(.5);
-                transferArmTop.setPosition(TRANSFER_ARM_TOP_FRONT);
-                transferClaw.setPosition(.85);
-            }
-
             if (gamepad2.dpad_down) {
                 transferArmBotttom.setPosition(TRANSFER_ARM_BOTTOM_BACK);
             }
+
+            /*if (gamepad1.dpad_down) {
+                transferArmBotttom.setPosition(.5);
+                transferArmTop.setPosition(TRANSFER_ARM_TOP_FRONT);
+                transferClaw.setPosition(.85);
+            }*/
 
             //Moves transferArmTop to front
             if (gamepad2.right_bumper) { //gamepad1.dpad_up
