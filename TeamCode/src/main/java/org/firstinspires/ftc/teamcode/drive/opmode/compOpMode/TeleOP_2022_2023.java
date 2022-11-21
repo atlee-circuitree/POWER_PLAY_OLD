@@ -55,8 +55,11 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             double pi = 3.1415926;
             double gyro_degrees = navx_centered.getYaw();
             double gyro_radians = gyro_degrees * pi / 180;
-            double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
-            x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians);
+            double temp = y_stick * Math.cos(gyro_radians) + -x_stick * Math.sin(gyro_radians);
+            x_stick = -y_stick * Math.sin(gyro_radians) + -x_stick * Math.cos(gyro_radians);
+
+            /* double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
+            x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians); */ //Original code from last year
 
             //Mecanum Drive Code
             double r = Math.hypot(x_stick, y_stick);
@@ -90,6 +93,8 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("Transfer Claw", transferClaw.getPosition());
             telemetry.addData("Transfer Arm Top", transferArmTop.getPosition());
             telemetry.addData("Transfer Arm Bottom", transferArmBotttom.getPosition());
+
+            telemetry.addData("NavX Heading", navx_centered.getYaw());
 
             //telemetry.addData("Vert Arm Pos", vertArmPos);
             //telemetry.addData("Vert Arm Target", vertArmTarget);
