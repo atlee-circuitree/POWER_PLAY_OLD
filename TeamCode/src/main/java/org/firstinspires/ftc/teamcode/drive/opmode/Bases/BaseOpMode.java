@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.Bases;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
+//import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -54,7 +54,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public double SD = 1;
     public double SA = 1;
 
-    public PIDController controller;
+    //public PIDController controller;
 
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
@@ -135,7 +135,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         RL_distance = hardwareMap.get(DistanceSensor.class, "RL_distance");
         RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");*/
 
-        controller = new PIDController(p, i, d);
+        //controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Most robots need the motor on one side to be reversed to drive forward
