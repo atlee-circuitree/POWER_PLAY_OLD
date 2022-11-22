@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.drive.opmode.Bases.BaseOpMode;
  */
 
 @Config
-@TeleOp(name="armEncoderTest", group="Linear Opmode")
-public class armEncoderTest extends BaseOpMode {
+@TeleOp(name="Arm Encoder Test", group="Linear Opmode")
+public class ArmEncoderTest extends BaseOpMode {
     @Override
     public void runOpMode() {
 
@@ -76,9 +76,9 @@ public class armEncoderTest extends BaseOpMode {
             telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
             telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
 
-            telemetry.addData("Horiz Arm Amount Extended", horizArm.getCurrentPosition());
-            telemetry.addData("Vert Arm Amount Extended", vertArm.getCurrentPosition());
-            telemetry.addData("Angle Arm Amount Extended", angleArm.getCurrentPosition());
+            telemetry.addData("Horiz Arm Encoder", horizArm.getCurrentPosition());
+            telemetry.addData("Vert Arm Encoder", vertArm.getCurrentPosition());
+            telemetry.addData("Angle Arm Encoder", angleArm.getCurrentPosition());
 
             telemetry.addData("Horiz Arm Power", horizArm.getPower());
             telemetry.addData("Vert Arm Power", vertArm.getPower());

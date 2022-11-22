@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.Bases;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -52,7 +52,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public double SD = 1;
     public double SA = 1;
 
-    //public PIDController controller;
+    public PIDController controller;
 
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
@@ -68,11 +68,13 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double TRANSFER_ARM_BOTTOM_BACK = .66;
 
     public static double armLengthWorm;
+    public static double armHeightWorm;
+    public static double armLengthClaw;
 
-    //public static int vertArmTarget = 0;
+    public static int horizArmTarget = 0;
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
-    //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
+    public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
     public final static double ARM_MIN_RANGE = 0.46;
     public final static double ARM_MAX_RANGE = 0.53;
 
@@ -135,7 +137,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         RL_distance = hardwareMap.get(DistanceSensor.class, "RL_distance");
         RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");*/
 
-        //controller = new PIDController(p, i, d);
+        controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -164,9 +166,6 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         SetDriveMode(Mode.RUN_WITH_ENCODER);
     }
-
-   // public void calculateHorizHeight(armLengthWorm,)
-
 
     public void GetIMU() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -204,9 +203,27 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     }
 
-    public void calculateArmAngle() {
+    /*public void calculateHorizHeight(int armLengthWorm, int armHeightWorm, int arm) {
+        final int
+        int
 
+        int armLengthFull = armLengthClaw(armHeightWorm/armLengthWorm)
+    }*/
+
+    public void angleArmPIDLoop() {
+        controller.setPID(p, i, d);
+        int horizArmPos = horizArm.getCurrentPosition();
+        double pid = controller.calculate((horizArmPos), horizArmTarget);
+        double ff = Math.cos(Math.toRadians(horizArmTarget / ticks_in_degrees)) * f;
+
+        double horizArmPower = pid + ff;
+
+        horizArm.setPower(horizArmPower);
+
+        telemetry.addData("Horiz Arm Pos", horizArmPos);
+        telemetry.addData("Horiz Arm Target", horizArmTarget);
     }
+
 
 
 /*
