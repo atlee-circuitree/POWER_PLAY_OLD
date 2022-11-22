@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.Bases;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 //import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -24,11 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.text.DecimalFormat;
 
-/**
- * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
- * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
- */
-
+@Config
 public abstract class BaseOpMode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -69,6 +66,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double TRANSFER_ARM_TOP_BACK = .2;
     public static double TRANSFER_ARM_BOTTOM_FRONT = .44;
     public static double TRANSFER_ARM_BOTTOM_BACK = .66;
+
+    public static double armLengthWorm;
 
     //public static int vertArmTarget = 0;
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
@@ -165,6 +164,8 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         SetDriveMode(Mode.RUN_WITH_ENCODER);
     }
+
+   // public void calculateHorizHeight(armLengthWorm,)
 
 
     public void GetIMU() {
