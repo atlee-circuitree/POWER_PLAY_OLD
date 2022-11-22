@@ -70,6 +70,8 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             final double v3 = (r * Math.sin(robotAngle) + rightX);
             final double v4 = (r * Math.cos(robotAngle) - rightX);
 
+            double servoPosition = .5;
+
             frontLeft.setPower(v1 * SD);
             rearLeft.setPower(v3 * SD);
             frontRight.setPower(v2 * SD);
@@ -95,6 +97,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("Transfer Arm Bottom", transferArmBotttom.getPosition());
 
             telemetry.addData("NavX Heading", navx_centered.getYaw());
+            telemetry.addData("encoderTest", servoPosition);
 
             //telemetry.addData("Vert Arm Pos", vertArmPos);
             //telemetry.addData("Vert Arm Target", vertArmTarget);
@@ -121,14 +124,39 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             }
 
             //Extends and Retracts horizArm
+<<<<<<< Updated upstream
             if (gamepad1.x) {
                 horizArm.setPower(1);
+=======
+            if (gamepad2.x) {
+              //  horizArm.setPower(1);
+                servoPosition += .1;
+>>>>>>> Stashed changes
             } else if (gamepad2.a) {
-                horizArm.setPower(-1);
-            } else {
-                horizArm.setPower(0);
+              //  horizArm.setPower(-1);
+                servoPosition -= .1;
+           // } else {
+              //  horizArm.setPower(0);
             }
 
+<<<<<<< Updated upstream
+=======
+            if (gamepad2.y) {
+               // vertArm.setPower(1);
+                servoPosition += .01;
+            } else if (gamepad2.b) {
+               // vertArm.setPower(-1);
+                servoPosition -= .01;
+            //} else {
+              //  vertArm.setPower(0);
+            }
+
+            if (gamepad2.right_stick_button) {
+                testServo.setPosition(servoPosition);
+            }
+
+            //Opens and Closes claw
+>>>>>>> Stashed changes
             //Opens horizClaw
             if (gamepad1.left_bumper) {
                 //horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);

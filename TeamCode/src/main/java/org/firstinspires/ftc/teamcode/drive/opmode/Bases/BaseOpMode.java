@@ -47,6 +47,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public Servo transferArmTop = null;
     public Servo transferArmBotttom = null;
 
+    public Servo servoTest = null;
+
     /*public DistanceSensor LS_distance;
     public DistanceSensor RS_distance;
     public DistanceSensor RL_distance;
@@ -130,6 +132,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         transferClaw = hardwareMap.get(Servo.class, "transferClaw");
         transferArmTop = hardwareMap.get(Servo.class, "transferArmTop");
         transferArmBotttom = hardwareMap.get(Servo.class, "transferArmBottom");
+
+        servoTest = hardwareMap.get(Servo.class, "servoTest");
+
 
         /*LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");
