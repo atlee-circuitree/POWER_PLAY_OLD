@@ -103,7 +103,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             //telemetry.addData("Vert Arm Target", vertArmTarget);
             telemetry.update();
 
-            if (gamepad1.back && gamepad1.a && gamepad1.x) {
+            if (gamepad2.back && gamepad2.a && gamepad2.x) {
                 if (testMode == true) {
                     testMode = true;
                 } else {
