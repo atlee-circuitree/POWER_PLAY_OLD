@@ -62,6 +62,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
 
+
     public static double HORIZONTAL_CLAW_OPEN = .5;
     public static double HORIZONTAL_CLAW_CLOSE = .6;
     public static double TRANSFER_CLAW_OPEN = .8;
