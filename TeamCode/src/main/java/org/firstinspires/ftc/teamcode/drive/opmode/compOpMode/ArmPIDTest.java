@@ -86,23 +86,36 @@ public class ArmPIDTest extends BaseOpMode {
                 zeroGyro();
             }
 
-            //Extends and Retracts horizArm
+            //Extends horizArm
             if (gamepad1.x) {
                 horizArmTarget = 500;
             }
 
+            //Retracts horizArm
             if (gamepad1.a) {
-                horizArmTarget = -500;
+                horizArmTarget = 0;
             }
 
+            /*if (gamepad1.y) {
+                horizArmTarget =
+            }*/
+
             //Opens horizClaw
-            if (gamepad1.left_bumper) {
+            if (gamepad1.dpad_left) {
                 horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
             }
 
             //Closes horizClaw
-            if (gamepad1.right_bumper) {
+            if (gamepad1.dpad_right) {
                 horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
+            }
+
+            if (gamepad1.right_bumper) {
+                angleArmTarget = 200;
+            }
+
+            if (gamepad1.left_bumper) {
+                angleArmTarget = 0;
             }
 
             //Moves angleArm up and down
@@ -115,11 +128,11 @@ public class ArmPIDTest extends BaseOpMode {
             }
 
             if (gamepad2.x) {
-                vertArm.setPower(1);
-            } else if (gamepad2.a) {
-                vertArm.setPower(-1);
-            } else {
-                vertArm.setPower(0);
+                vertArmTarget = 500;
+            }
+
+            if (gamepad2.a) {
+                vertArmTarget = 0;
             }
 
             //Opens and Closes Transfer Claw
@@ -142,12 +155,6 @@ public class ArmPIDTest extends BaseOpMode {
             if (gamepad2.dpad_down) {
                 transferArmBotttom.setPosition(TRANSFER_ARM_BOTTOM_BACK);
             }
-
-            /*if (gamepad1.dpad_down) {
-                transferArmBotttom.setPosition(.5);
-                transferArmTop.setPosition(TRANSFER_ARM_TOP_FRONT);
-                transferClaw.setPosition(.85);
-            }*/
 
             //Moves transferArmTop to front
             if (gamepad2.right_bumper) { //gamepad1.dpad_up
