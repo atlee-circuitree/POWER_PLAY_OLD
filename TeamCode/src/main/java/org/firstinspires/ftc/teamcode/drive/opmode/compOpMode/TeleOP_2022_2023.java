@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.Bases.BaseOpMode;
  */
 
 @Config
-@TeleOp(name="TeleOp_2022_2023", group="Linear Opmode")
+@TeleOp(name="TeleOp 2022-2023", group="Linear Opmode")
 public class TeleOP_2022_2023 extends BaseOpMode {
     @Override
     public void runOpMode() {

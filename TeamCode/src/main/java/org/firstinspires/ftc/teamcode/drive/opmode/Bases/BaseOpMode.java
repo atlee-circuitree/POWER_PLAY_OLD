@@ -52,7 +52,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public double SD = 1;
     public double SA = 1;
 
-    public PIDController controller;
+    public PIDController horizController;
+    public PIDController vertController;
+    public PIDController angleController;
 
     public static double p = 0, i = 0, d = 0;
     public static double f = 0;
@@ -72,6 +74,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double armLengthClaw;
 
     public static int horizArmTarget = 0;
+    public static int vertArmTarget = 0;
+    public static int angleArmTarget = 0;
+
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
     public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
@@ -137,7 +142,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         RL_distance = hardwareMap.get(DistanceSensor.class, "RL_distance");
         RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");*/
 
-        controller = new PIDController(p, i, d);
+        horizController = new PIDController(p, i, d);
+        vertController = new PIDController(p, i, d);
+        angleController = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -210,10 +217,10 @@ public abstract class BaseOpMode extends LinearOpMode {
         int armLengthFull = armLengthClaw(armHeightWorm/armLengthWorm)
     }*/
 
-    public void angleArmPIDLoop() {
-        controller.setPID(p, i, d);
+    public void horizArmPIDLoop() {
+        horizController.setPID(p, i, d);
         int horizArmPos = horizArm.getCurrentPosition();
-        double pid = controller.calculate((horizArmPos), horizArmTarget);
+        double pid = horizController.calculate((horizArmPos), horizArmTarget);
         double ff = Math.cos(Math.toRadians(horizArmTarget / ticks_in_degrees)) * f;
 
         double horizArmPower = pid + ff;
@@ -222,6 +229,34 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         telemetry.addData("Horiz Arm Pos", horizArmPos);
         telemetry.addData("Horiz Arm Target", horizArmTarget);
+    }
+
+    public void vertArmPIDLoop() {
+        vertController.setPID(p, i, d);
+        int vertArmPos = vertArm.getCurrentPosition();
+        double pid = vertController.calculate((vertArmPos), vertArmTarget);
+        double ff = Math.cos(Math.toRadians(vertArmTarget / ticks_in_degrees)) * f;
+
+        double vertArmPower = pid + ff;
+
+        vertArm.setPower(vertArmPower);
+
+        telemetry.addData("Vert Arm Pos", vertArmPos);
+        telemetry.addData("Vert Arm Target", vertArmPower);
+    }
+
+    public void angleArmPIDLoop() {
+        angleController.setPID(p, i, d);
+        int angleArmPos = vertArm.getCurrentPosition();
+        double pid = angleController.calculate((angleArmPos), angleArmTarget);
+        double ff = Math.cos(Math.toRadians(angleArmTarget / ticks_in_degrees)) * f;
+
+        double angleArmPower = pid + ff;
+
+        angleArm.setPower(angleArmPower);
+
+        telemetry.addData("Angle Arm Pos", angleArmPos);
+        telemetry.addData("Angle Arm Target", angleArmPower);
     }
 
 

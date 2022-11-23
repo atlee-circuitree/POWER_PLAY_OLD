@@ -33,10 +33,12 @@ public class ArmPIDTest extends BaseOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            horizArmPIDLoop();
+            vertArmPIDLoop();
             angleArmPIDLoop();
 
-            double y_stick = gamepad2.left_stick_y;
-            double x_stick = gamepad2.left_stick_x;
+            double y_stick = gamepad1.left_stick_y;
+            double x_stick = gamepad1.left_stick_x;
 
             //Field Orientation Code
             double pi = 3.1415926;
@@ -51,7 +53,7 @@ public class ArmPIDTest extends BaseOpMode {
             //Mecanum Drive Code
             double r = Math.hypot(x_stick, y_stick);
             double robotAngle = Math.atan2(y_stick, -x_stick) - Math.PI / 4;
-            double rightX = -gamepad2.right_stick_x;
+            double rightX = -gamepad1.right_stick_x;
             final double v1 = (r * Math.cos(robotAngle) + rightX);
             final double v2 = (r * Math.sin(robotAngle) - rightX);
             final double v3 = (r * Math.sin(robotAngle) + rightX);
@@ -64,65 +66,57 @@ public class ArmPIDTest extends BaseOpMode {
 
             telemetry.addData("Horiz Arm Target", horizArmTarget);
             telemetry.addData("Horiz Arm Pos", horizArm.getCurrentPosition());
+            telemetry.addData("Vert Arm Target", vertArmTarget);
+            telemetry.addData("Vert Arm Pos", vertArm.getCurrentPosition());
+            telemetry.addData("Angle Arm Target", angleArmTarget);
+            telemetry.addData("Angle Arm Pos", angleArm.getCurrentPosition());
             telemetry.update();
 
 
             //Controller 1 Auto Tele-op
-            //Does arm movements and extensions automatically
-            /*if (gamepad1.a) {
-                vertArm.setPower(vertArmPower);
-            }*/
-
-            //Controller 2 Manual Tele-op
             //Slows movement
-            if (gamepad2.left_stick_button) {
+            if (gamepad1.left_stick_button) {
                 SD = .25;
             } else {
                 SD = 1;
             }
 
             //Resets NavX heading
-            if (gamepad2.back) {
+            if (gamepad1.back) {
                 zeroGyro();
             }
 
             //Extends and Retracts horizArm
             if (gamepad1.x) {
-                horizArm.setPower(1);
-            } else if (gamepad2.a) {
-                horizArm.setPower(-1);
-            } else {
-                horizArm.setPower(0);
+                horizArmTarget = 500;
+            }
+
+            if (gamepad1.a) {
+                horizArmTarget = -500;
             }
 
             //Opens horizClaw
             if (gamepad1.left_bumper) {
-                //horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
-                horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
+                horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
             }
 
             //Closes horizClaw
             if (gamepad1.right_bumper) {
-                //horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
-                horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
+                horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
             }
 
-            /*if (gamepad1.y) {
-                angleArm.
-            }*/
+            //Moves angleArm up and down
+            if (gamepad1.right_trigger > .5) {
+                angleArm.setPower(1);
+            } else if (gamepad1.left_trigger > .5) {
+                angleArm.setPower(-1);
+            } else {
+                angleArm.setPower(0);
+            }
 
-                //Moves angleArm up and down
-                if (gamepad1.right_trigger > .5) {
-                    angleArm.setPower(1);
-                } else if (gamepad1.left_trigger > .5) {
-                    angleArm.setPower(-1);
-                } else {
-                    angleArm.setPower(0);
-                }
-
-            if (gamepad2.y) {
+            if (gamepad2.x) {
                 vertArm.setPower(1);
-            } else if (gamepad2.b) {
+            } else if (gamepad2.a) {
                 vertArm.setPower(-1);
             } else {
                 vertArm.setPower(0);
@@ -130,12 +124,12 @@ public class ArmPIDTest extends BaseOpMode {
 
             //Opens and Closes Transfer Claw
             //Opens transfer claw
-            if (gamepad2.dpad_left) {
+            if (gamepad2.y) {
                 transferClaw.setPosition(TRANSFER_CLAW_OPEN);
             }
 
             //Close transfer claw
-            if (gamepad2.dpad_right) {
+            if (gamepad2.b) {
                 transferClaw.setPosition(TRANSFER_CLAW_CLOSE);
             }
 
