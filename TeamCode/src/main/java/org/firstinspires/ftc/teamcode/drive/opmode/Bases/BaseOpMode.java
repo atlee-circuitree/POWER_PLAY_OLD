@@ -45,7 +45,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public Servo transferArmBotttom = null;
 
     public Servo servoTest = null;
-
+    public int testModeV = 0;
     /*public DistanceSensor LS_distance;
     public DistanceSensor RS_distance;
     public DistanceSensor RL_distance;
@@ -67,8 +67,10 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static int vertArmTarget = 0;
     public static int angleArmTarget = 0;
 
-    public static double HORIZONTAL_CLAW_OPEN = .5;
-    public static double HORIZONTAL_CLAW_CLOSE = .6;
+    public static double HORIZONTAL_CLAW_OPEN = .56;
+    public static double HORIZONTAL_CLAW_CLOSE = .85;
+    public static double HORIZONTAL_CLAW_MIDDLE = .68;
+    public static double HORIZONTAL_CLAW_HALF_CLOSE = .74;
     public static double TRANSFER_CLAW_OPEN = .8;
     public static double TRANSFER_CLAW_CLOSE = .75;
 

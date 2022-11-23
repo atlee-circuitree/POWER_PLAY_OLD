@@ -49,7 +49,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             double vertArmPower = pid + ff;
 
             vertArm.setPower(vertArmPower);*/
-            boolean testMode = false;
+
             double y_stick = gamepad1.left_stick_y;
             double x_stick = gamepad1.left_stick_x;
 
@@ -78,10 +78,12 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             rearRight.setPower(v4 * SD);
 
             //Show encoder values on the phone
-            if (testMode == true) {
-                telemetry.addData("Test Mode ", testMode);
+            if (testModeV == 1) {
+                telemetry.addData("Test Mode ", testModeV);
+            } else if (testModeV == 2) {
+                telemetry.addData("Servo Test Mode", testModeV);
             } else {
-                telemetry.addData("Driver Mode ", testMode);
+                telemetry.addData("Driver Mode ", testModeV);
             }
             telemetry.addData("Left Dead Encoder", frontLeft.getCurrentPosition());
             telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
@@ -106,31 +108,22 @@ public class TeleOP_2022_2023 extends BaseOpMode {
 
 
             //Controller 1 Auto Tele-op
-
-            if (gamepad1.b && gamepad1.a && gamepad1.x) {
-                if (testMode == true) {
-                    testMode = true;
+            if (gamepad1.b && gamepad1.y) {
+                //0 = Driver Mode
+                //1 = Test Mode
+                //2 = Servo Mode
+                if (testModeV == 0) {
+                    testModeV = 1;
+                } else if (testModeV == 1) {
+                    testModeV = 2;
                 } else {
-                    testMode = false;
+                    testModeV = 0;
                 }
             }
 
-            if (testMode = true) {
-                if (gamepad2.x) {
-                    servoPosition += .1;
-                } else if (gamepad2.a) {
-                    servoPosition -= .1;
-                }
+            //Test Mode
+            if(testModeV == 1) {
 
-                if (gamepad2.y) {
-                    servoPosition += .01;
-                } else if (gamepad2.b) {
-                    servoPosition -= .01;
-                }
-            }
-
-            //Slows movement
-            if (testMode == false) {
                 if (gamepad1.left_stick_button) {
                     SD = .25;
                 } else {
@@ -145,20 +138,28 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 //Extends and Retracts horizArm
                 if (gamepad1.x) {
                     horizArm.setPower(1);
-                } else if (gamepad2.a) {
+                } else if (gamepad1.a) {
                     horizArm.setPower(-1);
                 } else {
                     horizArm.setPower(0);
                 }
 
                 //Opens horizClaw
-                if (gamepad1.dpad_left) {
+                if (gamepad1.dpad_down) {
                     horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
                 }
 
                 //Closes horizClaw
-                if (gamepad1.dpad_right) {
+                if (gamepad1.dpad_up) {
                     horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
+                }
+
+                if (gamepad1.dpad_left) {
+                    horizClaw.setPosition((HORIZONTAL_CLAW_MIDDLE));
+                }
+
+                if (gamepad1.dpad_right) {
+                    horizClaw.setPosition(HORIZONTAL_CLAW_HALF_CLOSE);
                 }
 
                 //Moves angleArm up and down
@@ -200,12 +201,125 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 }
 
                 //Moves transferArmTop to front
-                if (gamepad2.right_bumper) { //gamepad1.dpad_up
+                if (gamepad2.right_bumper) {
                     transferArmTop.setPosition(TRANSFER_ARM_TOP_FRONT);
                 }
 
                 //Moves transferArmTop to back
-                if (gamepad2.left_bumper) { //gamepad1.dpad_down
+                if (gamepad2.left_bumper) {
+                    transferArmTop.setPosition(TRANSFER_ARM_TOP_BACK);
+                }
+
+            }
+            //Servo Test Mode
+            if (testModeV == 2) {
+                if (gamepad1.x) {
+                    servoPosition += .1;
+                }
+
+                 if (gamepad1.a) {
+                    servoPosition -= .1;
+                }
+
+                if (gamepad1.y) {
+                    servoPosition += .01;
+                }
+
+                if (gamepad1.b) {
+                    servoPosition -= .01;
+                }
+
+                if (gamepad1.dpad_down) {
+                    servoTest.setPosition(servoPosition);
+                }
+            }
+
+            //Driver mode
+            if (testModeV == 0) {
+                //Slows movement
+                if (gamepad1.left_stick_button) {
+                    SD = .25;
+                } else {
+                    SD = 1;
+                }
+
+                //Resets NavX heading
+                if (gamepad1.back) {
+                    zeroGyro();
+                }
+
+                //Extends and Retracts horizArm
+                if (gamepad1.x) {
+                    horizArm.setPower(1);
+                } else if (gamepad1.a) {
+                    horizArm.setPower(-1);
+                } else {
+                    horizArm.setPower(0);
+                }
+
+                //Opens horizClaw
+                if (gamepad1.dpad_down) {
+                    horizClaw.setPosition(HORIZONTAL_CLAW_OPEN);
+                }
+
+                //Closes horizClaw
+                if (gamepad1.dpad_up) {
+                    horizClaw.setPosition(HORIZONTAL_CLAW_CLOSE);
+                }
+
+                if (gamepad1.dpad_left) {
+                    horizClaw.setPosition((HORIZONTAL_CLAW_MIDDLE));
+                }
+
+                if (gamepad1.dpad_right) {
+                    horizClaw.setPosition(HORIZONTAL_CLAW_HALF_CLOSE);
+                }
+
+                //Moves angleArm up and down
+                if (gamepad1.right_trigger > .5) {
+                    angleArm.setPower(1);
+                } else if (gamepad1.left_trigger > .5) {
+                    angleArm.setPower(-1);
+                } else {
+                    angleArm.setPower(0);
+                }
+
+                if (gamepad2.x) {
+                    vertArm.setPower(1);
+                } else if (gamepad2.a) {
+                    vertArm.setPower(-1);
+                } else {
+                    vertArm.setPower(0);
+                }
+
+                //Opens and Closes Transfer Claw
+                //Opens transfer claw
+                if (gamepad2.y) {
+                    transferClaw.setPosition(TRANSFER_CLAW_OPEN);
+                }
+
+                //Close transfer claw
+                if (gamepad2.b) {
+                    transferClaw.setPosition(TRANSFER_CLAW_CLOSE);
+                }
+
+                //Moves transferArmBottom to front
+                if (gamepad2.dpad_up) {
+                    transferArmBotttom.setPosition(TRANSFER_ARM_BOTTOM_FRONT);
+                }
+
+                //Moves transferArmBottom to back
+                if (gamepad2.dpad_down) {
+                    transferArmBotttom.setPosition(TRANSFER_ARM_BOTTOM_BACK);
+                }
+
+                //Moves transferArmTop to front
+                if (gamepad2.right_bumper) {
+                    transferArmTop.setPosition(TRANSFER_ARM_TOP_FRONT);
+                }
+
+                //Moves transferArmTop to back
+                if (gamepad2.left_bumper) {
                     transferArmTop.setPosition(TRANSFER_ARM_TOP_BACK);
                 }
             }
