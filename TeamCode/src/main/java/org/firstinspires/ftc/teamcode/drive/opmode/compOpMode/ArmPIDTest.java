@@ -46,21 +46,21 @@ public class ArmPIDTest extends BaseOpMode {
             //Field Orientation Code
             double pi = 3.1415926;
             double gyro_degrees = navx_centered.getYaw();
-            double gyro_radians = gyro_degrees * pi / 180;
-            double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
-            x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians);
+            double gyro_radians = gyro_degrees * pi/180;
+            double y_joystick = y_stick * Math.cos(gyro_radians) + -x_stick * Math.sin(gyro_radians);
+            x_stick = -y_stick * Math.sin(gyro_radians) + -x_stick * Math.cos(gyro_radians);
 
-            /* double temp = y_stick * Math.cos(gyro_radians) + x_stick * Math.sin(gyro_radians);
-            x_stick = -y_stick * Math.sin(gyro_radians) + x_stick * Math.cos(gyro_radians); */ //Original code from last year
+            /* At this point, Joystick X/Y (strafe/forwrd) vectors have been */
+            /* rotated by the gyro angle, and can be sent to drive system */
 
             //Mecanum Drive Code
-            double r = Math.hypot(x_stick, y_stick);
-            double robotAngle = Math.atan2(y_stick, -x_stick) - Math.PI / 4;
+            double r = Math.hypot(x_stick, y_joystick);
+            double robotAngle = Math.atan2(y_joystick, x_stick) - Math.PI / 4;
             double rightX = -gamepad1.right_stick_x;
-            final double v1 = (r * Math.cos(robotAngle) + rightX);
-            final double v2 = (r * Math.sin(robotAngle) - rightX);
-            final double v3 = (r * Math.sin(robotAngle) + rightX);
-            final double v4 = (r * Math.cos(robotAngle) - rightX);
+            final double v1 = r * Math.cos(robotAngle) + rightX;
+            final double v2 = r * Math.sin(robotAngle) - rightX;
+            final double v3 = r * Math.sin(robotAngle) + rightX;
+            final double v4 = r * Math.cos(robotAngle) - rightX;
 
             frontLeft.setPower(v1 * SD);
             rearLeft.setPower(v3 * SD);

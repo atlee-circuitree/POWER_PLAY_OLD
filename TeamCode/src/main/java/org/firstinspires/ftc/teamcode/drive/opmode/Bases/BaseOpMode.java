@@ -79,7 +79,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double TRANSFER_ARM_BOTTOM_FRONT = .44;
     public static double TRANSFER_ARM_BOTTOM_BACK = .66;
 
-    public final double ticks_in_degrees = 384.5; //Arm motor ticks
+    public final double horizArmTicksInDegrees = 384.5; //Arm motor ticks
+    public final double vertArmTicksInDegrees = 384.5; //Arm motor ticks
+    public final double angleArmTicksInDegrees = 384.5; //Arm motor ticks
 
     public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
     public final static double ARM_MIN_RANGE = 0.46;
@@ -219,7 +221,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         horizController.setPID(hP, hI, hD);
         int horizArmPos = horizArm.getCurrentPosition();
         double pid = horizController.calculate((horizArmPos), horizArmTarget);
-        double ff = Math.cos(Math.toRadians(horizArmTarget / ticks_in_degrees)) * hF;
+        double ff = Math.cos(Math.toRadians(horizArmTarget / horizArmTicksInDegrees)) * hF;
 
         double horizArmPower = pid + ff;
 
@@ -233,7 +235,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         vertController.setPID(vP, vI, vD);
         int vertArmPos = vertArm.getCurrentPosition();
         double pid = vertController.calculate((vertArmPos), vertArmTarget);
-        double ff = Math.cos(Math.toRadians(vertArmTarget / ticks_in_degrees)) * vF;
+        double ff = Math.cos(Math.toRadians(vertArmTarget / vertArmTicksInDegrees)) * vF;
 
         double vertArmPower = pid + ff;
 
@@ -247,7 +249,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         angleController.setPID(aP, aI, aD);
         int angleArmPos = vertArm.getCurrentPosition();
         double pid = angleController.calculate((angleArmPos), angleArmTarget);
-        double ff = Math.cos(Math.toRadians(angleArmTarget / ticks_in_degrees)) * aF;
+        double ff = Math.cos(Math.toRadians(angleArmTarget / angleArmTicksInDegrees)) * aF;
 
         double angleArmPower = pid + ff;
 
