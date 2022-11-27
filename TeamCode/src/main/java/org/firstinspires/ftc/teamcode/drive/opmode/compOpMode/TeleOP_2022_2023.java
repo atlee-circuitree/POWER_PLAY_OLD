@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.Bases.BaseOpMode;
 @TeleOp(name="TeleOp 2022-2023", group="Linear Opmode")
 public class TeleOP_2022_2023 extends BaseOpMode {
     @Override
+
     public void runOpMode() {
 
         GetHardware();
@@ -249,9 +250,9 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 }
 
                 //Extends and Retracts horizArm
-                if (gamepad1.x) {
+                if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
                     horizArm.setPower(1);
-                } else if (gamepad1.a) {
+                } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
                     horizArm.setPower(-1);
                 } else {
                     horizArm.setPower(0);
@@ -284,9 +285,9 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                     angleArm.setPower(0);
                 }
 
-                if (gamepad2.x) {
+                if (gamepad2.right_trigger > TRIGGER_THRESHOLD) {
                     vertArm.setPower(1);
-                } else if (gamepad2.a) {
+                } else if (gamepad2.left_trigger > TRIGGER_THRESHOLD) {
                     vertArm.setPower(-1);
                 } else {
                     vertArm.setPower(0);

@@ -66,7 +66,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static int horizArmTarget = 0;
     public static int vertArmTarget = 0;
     public static int angleArmTarget = 0;
-
+    public static double TRIGGER_THRESHOLD = .5;
     public static double HORIZONTAL_CLAW_OPEN = .56;
     public static double HORIZONTAL_CLAW_CLOSE = .85;
     public static double HORIZONTAL_CLAW_MIDDLE = .68;
