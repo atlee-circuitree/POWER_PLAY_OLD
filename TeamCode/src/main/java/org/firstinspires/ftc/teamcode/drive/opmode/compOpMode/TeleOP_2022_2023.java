@@ -41,15 +41,9 @@ public class TeleOP_2022_2023 extends BaseOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //PID Code for arms
-            /*controller.setPID(p, i, d);
-            int vertArmPos = vertArm.getCurrentPosition();
-            double pid = controller.calculate((vertArmPos), vertArmTarget);
-            double ff = Math.cos(Math.toRadians(vertArmTarget / ticks_in_degrees)) * f;
-
-            double vertArmPower = pid + ff;
-
-            vertArm.setPower(vertArmPower);*/
+            horizArmPIDLoop();
+            vertArmPIDLoop();
+            angleArmPIDLoop();
 
             double y_stick = gamepad1.left_stick_y;
             double x_stick = gamepad1.left_stick_x;
@@ -90,10 +84,6 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             telemetry.addData("Right Dead Encoder", rearRight.getCurrentPosition());
             telemetry.addData("Rear Dead Encoder", rearLeft.getCurrentPosition());
 
-            telemetry.addData("Horiz Arm Amount Extended", horizArm.getCurrentPosition());
-            telemetry.addData("Vert Arm Amount Extended", vertArm.getCurrentPosition());
-            telemetry.addData("Angle Arm Amount Extended", angleArm.getCurrentPosition());
-
             telemetry.addData("Horiz Arm Power", horizArm.getPower());
             telemetry.addData("Vert Arm Power", vertArm.getPower());
             telemetry.addData("Angle Arm Power", angleArm.getPower());
@@ -109,7 +99,7 @@ public class TeleOP_2022_2023 extends BaseOpMode {
 
 
             //Controller 1 Auto Tele-op
-            if (gamepad1.b && gamepad1.y) {
+            if (gamepad1.guide && gamepad1.start) { //guide button = mode button
                 //0 = Driver Mode
                 //1 = Test Mode
                 //2 = Servo Mode
@@ -137,12 +127,28 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 }
 
                 //Extends and Retracts horizArm
-                if (gamepad1.x) {
+                /*if (gamepad1.x) {
                     horizArm.setPower(1);
                 } else if (gamepad1.a) {
                     horizArm.setPower(-1);
                 } else {
                     horizArm.setPower(0);
+                }*/
+
+                if (gamepad1.x) {
+                    horizArmTarget = 1000;
+                }
+
+                if (gamepad1.y) {
+                    horizArmTarget += 100;
+                }
+
+                if (gamepad1.a) {
+                    horizArmTarget = 0;
+                }
+
+                if (gamepad1.b) {
+                    horizArmTarget -= 100;
                 }
 
                 //Opens horizClaw
@@ -164,30 +170,62 @@ public class TeleOP_2022_2023 extends BaseOpMode {
                 }
 
                 //Moves angleArm up and down
-                if (gamepad1.right_trigger > .5) {
+                /*if (gamepad1.right_trigger > .5) {
                     angleArm.setPower(1);
                 } else if (gamepad1.left_trigger > .5) {
                     angleArm.setPower(-1);
                 } else {
                     angleArm.setPower(0);
+                }*/
+
+                if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
+                    angleArmTarget = 1000;
                 }
 
-                if (gamepad2.x) {
+                if (gamepad1.right_bumper) {
+                    angleArmTarget += 100;
+                }
+
+                if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+                    angleArmTarget = 0;
+                }
+
+                if (gamepad1.left_bumper) {
+                    angleArmTarget -= 100;
+                }
+
+                /*if (gamepad2.x) {
                     vertArm.setPower(1);
                 } else if (gamepad2.a) {
                     vertArm.setPower(-1);
                 } else {
                     vertArm.setPower(0);
+                }*/
+
+                if (gamepad2.x) {
+                    vertArmTarget = 1000;
+                }
+
+                if (gamepad2.y) {
+                    vertArmTarget += 100;
+                }
+
+                if (gamepad2.a) {
+                    vertArmTarget = 0;
+                }
+
+                if (gamepad2.b) {
+                    vertArmTarget -= 100;
                 }
 
                 //Opens and Closes Transfer Claw
                 //Opens transfer claw
-                if (gamepad2.y) {
+                if (gamepad2.dpad_left) {
                     transferClaw.setPosition(TRANSFER_CLAW_OPEN);
                 }
 
                 //Close transfer claw
-                if (gamepad2.b) {
+                if (gamepad2.dpad_right) {
                     transferClaw.setPosition(TRANSFER_CLAW_CLOSE);
                 }
 
