@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.Bases;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
@@ -24,11 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.text.DecimalFormat;
 
-/**
- * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
- * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
- */
-
+@Config
 public abstract class BaseOpMode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -47,6 +44,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public Servo transferArmTop = null;
     public Servo transferArmBotttom = null;
 
+    public Servo servoTest = null;
+    public int testModeV = 0;
     /*public DistanceSensor LS_distance;
     public DistanceSensor RS_distance;
     public DistanceSensor RL_distance;
@@ -55,13 +54,23 @@ public abstract class BaseOpMode extends LinearOpMode {
     public double SD = 1;
     public double SA = 1;
 
-    //public PIDController controller;
+    public PIDController horizController;
+    public PIDController vertController;
+    public PIDController angleController;
 
-    public static double p = 0, i = 0, d = 0;
-    public static double f = 0;
+    public static double pH = 0, iH = 0, dH = 0;
+    public static double pV = 0, iV = 0, dV = 0;
+    public static double pA = 0, iA = 0, dA = 0;
+    public static double fH = 0, fV = 0, fA = 0;
 
-    public static double HORIZONTAL_CLAW_OPEN = .5;
-    public static double HORIZONTAL_CLAW_CLOSE = .6;
+    public static int horizArmTarget = 0;
+    public static int vertArmTarget = 0;
+    public static int angleArmTarget = 0;
+    public static double TRIGGER_THRESHOLD = .5;
+    public static double HORIZONTAL_CLAW_OPEN = .56;
+    public static double HORIZONTAL_CLAW_CLOSE = .85;
+    public static double HORIZONTAL_CLAW_MIDDLE = .68;
+    public static double HORIZONTAL_CLAW_HALF_CLOSE = .74;
     public static double TRANSFER_CLAW_OPEN = .8;
     public static double TRANSFER_CLAW_CLOSE = .75;
 
@@ -70,10 +79,13 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static double TRANSFER_ARM_BOTTOM_FRONT = .44;
     public static double TRANSFER_ARM_BOTTOM_BACK = .66;
 
-    //public static int vertArmTarget = 0;
+    public static double armLengthWorm;
+    public static double armHeightWorm;
+    public static double armLengthClaw;
+
     public final double ticks_in_degrees = 384.5; //Arm motor ticks
 
-    //public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
+    public final static double ARM_DEFAULT = 0.5; //Unslash this if you want armTurn servo using joystick back (This is for variable turn of a servo)
     public final static double ARM_MIN_RANGE = 0.46;
     public final static double ARM_MAX_RANGE = 0.53;
 
@@ -131,12 +143,16 @@ public abstract class BaseOpMode extends LinearOpMode {
         transferArmTop = hardwareMap.get(Servo.class, "transferArmTop");
         transferArmBotttom = hardwareMap.get(Servo.class, "transferArmBottom");
 
+        servoTest = hardwareMap.get(Servo.class, "servoTest");
+
         /*LS_distance = hardwareMap.get(DistanceSensor.class, "LS_distance");
         RS_distance = hardwareMap.get(DistanceSensor.class, "RS_distance");
         RL_distance = hardwareMap.get(DistanceSensor.class, "RL_distance");
         RR_distance = hardwareMap.get(DistanceSensor.class, "RR_distance");*/
 
-        //controller = new PIDController(p, i, d);
+        horizController = new PIDController(pH, iH, dH);
+        vertController = new PIDController(pV, iV, dV);
+        angleController = new PIDController(pA, iA, dA);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -147,6 +163,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         rearRight.setDirection(DcMotor.Direction.REVERSE);
 
         vertArm.setDirection(DcMotor.Direction.REVERSE);
+        angleArm.setDirection(DcMotor.Direction.REVERSE);
 
         SetDriveMode(Mode.STOP_RESET_ENCODER);
 
@@ -165,7 +182,6 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         SetDriveMode(Mode.RUN_WITH_ENCODER);
     }
-
 
     public void GetIMU() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -203,9 +219,55 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     }
 
-    public void calculateArmAngle() {
+    /*public void calculateHorizHeight(int armLengthWorm, int armHeightWorm, int arm) {
+        final int
+        int
 
+        int armLengthFull = armLengthClaw(armHeightWorm/armLengthWorm)
+    }*/
+
+    public void horizArmPIDLoop() {
+        horizController.setPID(pH, iH, dH);
+        int horizArmPos = horizArm.getCurrentPosition();
+        double pid = horizController.calculate((horizArmPos), horizArmTarget);
+        double ff = Math.cos(Math.toRadians(horizArmTarget / ticks_in_degrees)) * fH;
+
+        double horizArmPower = pid + ff;
+
+        horizArm.setPower(horizArmPower);
+
+        telemetry.addData("Horiz Arm Pos", horizArmPos);
+        telemetry.addData("Horiz Arm Target", horizArmTarget);
     }
+
+    public void vertArmPIDLoop() {
+        vertController.setPID(pV, iV, dV);
+        int vertArmPos = vertArm.getCurrentPosition();
+        double pid = vertController.calculate((vertArmPos), vertArmTarget);
+        double ff = Math.cos(Math.toRadians(vertArmTarget / ticks_in_degrees)) * fV;
+
+        double vertArmPower = pid + ff;
+
+        vertArm.setPower(vertArmPower);
+
+        telemetry.addData("Vert Arm Pos", vertArmPos);
+        telemetry.addData("Vert Arm Target", vertArmPower);
+    }
+
+    public void angleArmPIDLoop() {
+        angleController.setPID(pA, iA, dA);
+        int angleArmPos = vertArm.getCurrentPosition();
+        double pid = angleController.calculate((angleArmPos), angleArmTarget);
+        double ff = Math.cos(Math.toRadians(angleArmTarget / ticks_in_degrees)) * fA;
+
+        double angleArmPower = pid + ff;
+
+        angleArm.setPower(angleArmPower);
+
+        telemetry.addData("Angle Arm Pos", angleArmPos);
+        telemetry.addData("Angle Arm Target", angleArmPower);
+    }
+
 
 
 /*
