@@ -50,7 +50,6 @@ public class TeleOP_2022_2023 extends BaseOpMode {
             double vertArmPower = pid + ff;
 
             vertArm.setPower(vertArmPower);*/
-
             double y_stick = gamepad1.left_stick_y;
             double x_stick = gamepad1.left_stick_x;
 

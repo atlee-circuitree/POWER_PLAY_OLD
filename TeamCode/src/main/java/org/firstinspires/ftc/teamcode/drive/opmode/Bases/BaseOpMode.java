@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.opmode.Bases.kauailabs.navx.ftc.AHRS;
 
 
@@ -153,7 +154,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         horizController = new PIDController(pH, iH, dH);
         vertController = new PIDController(pV, iV, dV);
         angleController = new PIDController(pA, iA, dA);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
